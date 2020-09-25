@@ -2,10 +2,10 @@ package org.learn.employeemanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +35,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        String returnMessage = "";
         Button update = findViewById(R.id.button_employee_update);
         Button delete = findViewById(R.id.button_employee_delete);
 
@@ -43,6 +43,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 updateEmployee();
+                returnToCaller("Employee: " + mEmployee.getId() + " updated!");
             }
         });
 
@@ -50,13 +51,19 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteEmployee();
+                returnToCaller("Employee: " + mEmployee.getId() + " deleted!");
             }
         });
-
-
     }
 
-    private void updateEmployee() {
+    private void returnToCaller(String returnMessage) {
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", returnMessage);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    private int updateEmployee() {
         ContentValues contentValues = new ContentValues();
         String name = ((EditText)findViewById(R.id.edittext_name)).getText().toString();
         String department = ((EditText)findViewById(R.id.edittext_department)).getText().toString();
@@ -68,15 +75,15 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
 
         int count = getContentResolver().update(EmployeeContentProvider.CONTENT_URI, contentValues, selectionClause, selectionArgs);
 
-        Log.d(TAG, String.valueOf(count));
+        return count;
     }
 
-    private void deleteEmployee() {
+    private int deleteEmployee() {
         String selectionClause = "_ID = ?";
         String[] selectionArgs = {mEmployee.getId()};
         int count = getContentResolver().delete(EmployeeContentProvider.CONTENT_URI, selectionClause, selectionArgs);
 
-        Log.d(TAG, String.valueOf(count));
+        return count;
     }
 
 }

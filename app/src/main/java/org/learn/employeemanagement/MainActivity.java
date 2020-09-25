@@ -1,5 +1,6 @@
 package org.learn.employeemanagement;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,12 +11,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private static final int UPDATE_ACTIVITY_CODE = 1;
+    private String mMessage;
+    private int mResultInt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +33,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Employee employee = (Employee) adapterView.getItemAtPosition(position);
-                Log.d(TAG, employee.toString());
 
                 Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
                 intent.putExtra("Employee", employee);
-                startActivity(intent);
+                startActivityForResult(intent, UPDATE_ACTIVITY_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UPDATE_ACTIVITY_CODE) {
+            mResultInt = 1;
+            mMessage = data.getStringExtra("MESSAGE");
+        }
     }
 
     @Override
@@ -44,12 +57,27 @@ public class MainActivity extends AppCompatActivity {
         fillListview();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (mResultInt == 1) {
+            Toast.makeText(getApplicationContext(), mMessage, Toast.LENGTH_LONG).show();
+            mResultInt = 0;
+        }
+    }
+
+
+
     private void fillListview() {
+
+
+
         ListView listView = findViewById(R.id.list_employees);
         List<Employee> allEmployees = getAllEmployees();
 
         CustomAdapter myAdapter = new CustomAdapter(allEmployees, this);
         listView.setAdapter(myAdapter);
+
     }
 
     private List<Employee> getAllEmployees() {
