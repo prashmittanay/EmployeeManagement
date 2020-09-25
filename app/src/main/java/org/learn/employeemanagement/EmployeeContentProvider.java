@@ -9,6 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class EmployeeContentProvider extends ContentProvider {
+    // constructing the content URI
+    static final String AUTHORITY = "org.learn.employeemanagement.EmployeeContentProvider";
+    static final String PATH = "employees"
+    static final String URI = "content://" + AUTHORITY + PATH;
+    static final Uri CONTENT_URI = Uri.parse(URI);
+
+    
     @Override
     public boolean onCreate() {
         return false;
