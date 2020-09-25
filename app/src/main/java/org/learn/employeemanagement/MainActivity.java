@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.list_employees);
+        TextView emptyText = (TextView)findViewById(R.id.emptyElement);
+        listView.setEmptyView(emptyText);
         FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_employee);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
