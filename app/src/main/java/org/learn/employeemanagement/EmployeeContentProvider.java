@@ -164,7 +164,27 @@ public class EmployeeContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int count = 0;
+
+        switch (uriMatcher.match(uri)){
+            case EMPLOYEES:
+                count = mSQLiteDatabase.update(EMPLOYEE_TABLE_NAME, contentValues, selection, selectionArgs);
+                break;
+            case EMPLOYEE_ID:
+                String id = uri.getPathSegments().get(1);
+                String selectionQuery = "";
+                if (!TextUtils.isEmpty(selection)) {
+                    selectionQuery += " AND (" + selectionQuery + ")";
+                }
+
+                count = mSQLiteDatabase.update(EMPLOYEE_TABLE_NAME, contentValues, _ID + " = " + id + selectionQuery, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 }
