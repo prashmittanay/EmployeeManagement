@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == UPDATE_ACTIVITY_CODE) {
+        if (requestCode == UPDATE_ACTIVITY_CODE && resultCode == -1) {
             mResultInt = 1;
             mMessage = data.getStringExtra("MESSAGE");
-        } else if (requestCode == INSERT_ACTIVITY_CODE) {
+        } else if (requestCode == INSERT_ACTIVITY_CODE && resultCode == -1) {
             mResultInt = 1;
             mMessage = data.getStringExtra("MESSAGE");
         }
