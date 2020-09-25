@@ -37,6 +37,8 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
         super.onResume();
 
         Button update = findViewById(R.id.button_employee_update);
+        Button delete = findViewById(R.id.button_employee_delete);
+
         update.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -44,6 +46,12 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
             }
         });
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteEmployee();
+            }
+        });
 
 
     }
@@ -62,4 +70,13 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
 
         Log.d(TAG, String.valueOf(count));
     }
+
+    private void deleteEmployee() {
+        String selectionClause = "_ID = ?";
+        String[] selectionArgs = {mEmployee.getId()};
+        int count = getContentResolver().delete(EmployeeContentProvider.CONTENT_URI, selectionClause, selectionArgs);
+
+        Log.d(TAG, String.valueOf(count));
+    }
+
 }
