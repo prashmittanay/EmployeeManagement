@@ -29,7 +29,7 @@
             android:textColorHint="@android:color/holo_blue_light" />
 
         <EditText
-            android:id="@+id/edittext_designation"
+            android:id="@+id/edittext_department"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:width="300dp"
@@ -43,13 +43,13 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/cheat_button"
+            android:id="@+id/button_employee_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update"/>
 
         <Button
-            android:id="@+id/next_button"
+            android:id="@+id/button_employee_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete" />
