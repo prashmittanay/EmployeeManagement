@@ -13,12 +13,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int UPDATE_ACTIVITY_CODE = 1;
+    private static final int INSERT_ACTIVITY_CODE = 2;
     private String mMessage;
     private int mResultInt = 0;
 
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.list_employees);
+        FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_employee);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -39,12 +43,24 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, UPDATE_ACTIVITY_CODE);
             }
         });
+
+        add.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
+                startActivityForResult(intent, INSERT_ACTIVITY_CODE);
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == UPDATE_ACTIVITY_CODE) {
+            mResultInt = 1;
+            mMessage = data.getStringExtra("MESSAGE");
+        } else if (requestCode == INSERT_ACTIVITY_CODE) {
             mResultInt = 1;
             mMessage = data.getStringExtra("MESSAGE");
         }
