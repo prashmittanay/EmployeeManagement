@@ -3,18 +3,33 @@ package org.learn.employeemanagement;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ListView listView = (ListView) findViewById(R.id.list_employees);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Employee employee = (Employee) adapterView.getItemAtPosition(position);
+                Log.d(TAG, employee.toString());
+            }
+        });
     }
 
     @Override
