@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void fillListview() {
-
-
-
         ListView listView = findViewById(R.id.list_employees);
         List<Employee> allEmployees = getAllEmployees();
 
