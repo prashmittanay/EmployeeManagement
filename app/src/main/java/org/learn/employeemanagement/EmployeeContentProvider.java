@@ -101,7 +101,7 @@ public class EmployeeContentProvider extends ContentProvider {
         }
 
         if (sortOrder == null || sortOrder == "") {
-            sortOrder = NAME;
+            sortOrder = _ID;
         }
 
         Cursor cursor = sqLiteQueryBuilder.query(mSQLiteDatabase, projection, selection, selectionArgs, null, null, sortOrder);
