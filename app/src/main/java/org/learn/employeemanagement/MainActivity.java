@@ -2,6 +2,7 @@ package org.learn.employeemanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Employee employee = (Employee) adapterView.getItemAtPosition(position);
                 Log.d(TAG, employee.toString());
+
+                Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
+                intent.putExtra("Employee", employee);
+                startActivity(intent);
             }
         });
     }

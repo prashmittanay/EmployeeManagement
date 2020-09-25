@@ -1,6 +1,8 @@
 package org.learn.employeemanagement;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
     private String id;
     private String name;
     private String department;
