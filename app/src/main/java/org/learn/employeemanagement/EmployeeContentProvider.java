@@ -1,13 +1,17 @@
 package org.learn.employeemanagement;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +58,7 @@ public class EmployeeContentProvider extends ContentProvider {
 
     private class DatabaseHelper extends SQLiteOpenHelper {
 
-        public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        public DatabaseHelper(@Nullable Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
@@ -72,30 +76,91 @@ public class EmployeeContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        Context context = getContext();
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+        mSQLiteDatabase = databaseHelper.getWritableDatabase();
+
+        return !(mSQLiteDatabase == null);
     }
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+        sqLiteQueryBuilder.setTables(EMPLOYEE_TABLE_NAME);
+
+        switch (uriMatcher.match(uri)) {
+            case EMPLOYEES:
+                sqLiteQueryBuilder.setProjectionMap(EMPLOYEES_PROJECTION_MAP);
+                break;
+            case EMPLOYEE_ID:
+                sqLiteQueryBuilder.appendWhere(_ID + "=" + uri.getPathSegments().get(1));
+                break;
+            default:
+        }
+
+        if (sortOrder == null || sortOrder == "") {
+            sortOrder = NAME;
+        }
+
+        Cursor cursor = sqLiteQueryBuilder.query(mSQLiteDatabase, projection, selection, selectionArgs, null, null, sortOrder);
+
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+        switch (uriMatcher.match(uri)) {
+            case EMPLOYEES:
+                return "vnd.android.cursor.dir/vnd.example.employees";
+            case EMPLOYEE_ID:
+                return "vnd.android.cursor.item/vnd.example.employees";
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
     }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+        long rowId = mSQLiteDatabase.insert(EMPLOYEE_TABLE_NAME, "", contentValues);
+
+
+        if (rowId > 0) {
+            Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowId);
+            getContext().getContentResolver().notifyChange(_uri, null);
+            return _uri;
+        }
+
+        throw new SQLException("Failed to add a record into " + uri);
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int count = 0;
+
+        switch (uriMatcher.match(uri)){
+            case EMPLOYEES:
+                count = mSQLiteDatabase.delete(EMPLOYEE_TABLE_NAME, selection, selectionArgs);
+                break;
+            case EMPLOYEE_ID:
+                String id = uri.getPathSegments().get(1);
+                String selectionQuery = "";
+                if (!TextUtils.isEmpty(selection)) {
+                    selectionQuery += " AND (" + selectionQuery + ")";
+                }
+
+                count = mSQLiteDatabase.delete(EMPLOYEE_TABLE_NAME, _ID + " = " + id + selectionQuery, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
     @Override
