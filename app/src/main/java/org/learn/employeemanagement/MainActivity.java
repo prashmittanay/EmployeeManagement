@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,26 +86,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void fillListview() {
         ListView listView = findViewById(R.id.list_employees);
-        List<Employee> allEmployees = getAllEmployees();
+        Cursor employeeCursor = getAllEmployeesCursor();
 
-        CustomAdapter myAdapter = new CustomAdapter(allEmployees, this);
-        listView.setAdapter(myAdapter);
+        CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(this, employeeCursor, 0);
+        listView.setAdapter(customCursorAdapter);
 
     }
 
-    private List<Employee> getAllEmployees() {
-        Cursor cursor = getContentResolver().query(EmployeeContentProvider.CONTENT_URI, null, null, null, "");
-        List<Employee> employeeList = new ArrayList<Employee>();
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID));
-                String name = cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME));
-                String department = cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT));
+    private Cursor getAllEmployeesCursor() {
+        Cursor employeeCursor = getContentResolver().query(EmployeeContentProvider.CONTENT_URI, null, null, null, "");
 
-                employeeList.add(new Employee(String.valueOf(id), name, department));
-            } while (cursor.moveToNext());
-        }
-
-        return employeeList;
+        return employeeCursor;
     }
 }
