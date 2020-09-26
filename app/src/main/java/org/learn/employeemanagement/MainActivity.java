@@ -36,7 +36,11 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Employee employee = (Employee) adapterView.getItemAtPosition(position);
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+
+                Employee employee = new Employee(String.valueOf(cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID))),
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME)),
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT)));
 
                 Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
                 intent.putExtra("Employee", employee);
