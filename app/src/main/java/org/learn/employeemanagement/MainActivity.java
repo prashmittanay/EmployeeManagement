@@ -1,7 +1,11 @@
 package org.learn.employeemanagement;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,26 +18,30 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "MainActivity";
     private static final int UPDATE_ACTIVITY_CODE = 1;
     private static final int INSERT_ACTIVITY_CODE = 2;
     private String mMessage;
     private int mResultInt = 0;
 
+    //views
+    private ListView mListView;
+    private TextView mTextView;
+    private FloatingActionButton mFloatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = (ListView) findViewById(R.id.list_employees);
-        TextView emptyText = (TextView)findViewById(R.id.emptyElement);
-        listView.setEmptyView(emptyText);
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.add_employee);
+        mListView = (ListView) findViewById(R.id.list_employees);
+        mTextView = (TextView)findViewById(R.id.emptyElement);
+        mListView.setEmptyView(mTextView);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.add_employee);
 
-        addListeners(listView, floatingActionButton);
+        addListeners();
+        LoaderManager.getInstance(this).initLoader(1, null, this);
     }
 
     @Override
@@ -51,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        fillListview();
     }
 
     @Override
@@ -64,25 +70,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private CursorLoader getAllEmployeesCursor() {
 
+        CursorLoader cursorLoader = new CursorLoader(this, EmployeeContentProvider.CONTENT_URI,
+                null, null, null, null);
 
-    private void fillListview() {
-        ListView listView = findViewById(R.id.list_employees);
-        Cursor employeeCursor = getAllEmployeesCursor();
-
-        CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(this, employeeCursor, 0);
-        listView.setAdapter(customCursorAdapter);
-
+        return cursorLoader;
     }
 
-    private Cursor getAllEmployeesCursor() {
-        Cursor employeeCursor = getContentResolver().query(EmployeeContentProvider.CONTENT_URI, null, null, null, "");
-
-        return employeeCursor;
-    }
-
-    private void addListeners(ListView listView, FloatingActionButton floatingActionButton){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void addListeners(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
@@ -97,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener(){
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
@@ -105,6 +102,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, INSERT_ACTIVITY_CODE);
             }
         });
+
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        CursorLoader cursorLoader = new CursorLoader(this, EmployeeContentProvider.CONTENT_URI,
+                null, null, null, null);
+
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        cursor.moveToFirst();
+        CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(this, cursor, 0);
+        mListView.setAdapter(customCursorAdapter);
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
 }
