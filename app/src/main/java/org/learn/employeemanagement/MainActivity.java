@@ -31,31 +31,9 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list_employees);
         TextView emptyText = (TextView)findViewById(R.id.emptyElement);
         listView.setEmptyView(emptyText);
-        FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_employee);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.add_employee);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-
-                Employee employee = new Employee(String.valueOf(cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID))),
-                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME)),
-                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT)));
-
-                Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
-                intent.putExtra("Employee", employee);
-                startActivityForResult(intent, UPDATE_ACTIVITY_CODE);
-            }
-        });
-
-        add.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
-                startActivityForResult(intent, INSERT_ACTIVITY_CODE);
-            }
-        });
+        addListeners(listView, floatingActionButton);
     }
 
     @Override
@@ -101,5 +79,32 @@ public class MainActivity extends AppCompatActivity {
         Cursor employeeCursor = getContentResolver().query(EmployeeContentProvider.CONTENT_URI, null, null, null, "");
 
         return employeeCursor;
+    }
+
+    private void addListeners(ListView listView, FloatingActionButton floatingActionButton){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+
+                Employee employee = new Employee(String.valueOf(cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID))),
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME)),
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT)));
+
+                Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
+                intent.putExtra("Employee", employee);
+                startActivityForResult(intent, UPDATE_ACTIVITY_CODE);
+            }
+        });
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), InsertActivity.class);
+                startActivityForResult(intent, INSERT_ACTIVITY_CODE);
+            }
+        });
+
     }
 }
