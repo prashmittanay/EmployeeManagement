@@ -21,7 +21,8 @@
 
         <provider
             android:name=".EmployeeContentProvider"
-            android:authorities="org.learn.employeemanagement.EmployeeContentProvider" />
+            android:authorities="org.learn.employeemanagement.EmployeeContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
