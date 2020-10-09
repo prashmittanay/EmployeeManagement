@@ -18,13 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:id="@+id/checkeded"
+        android:id="@+id/rg_text_orientation"
         android:orientation="horizontal" >
-        <RadioButton android:id="@+id/radio_pirates"
+        <RadioButton android:id="@+id/rb_ori_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Left" />
-        <RadioButton android:id="@+id/radio_ninjas"
+        <RadioButton android:id="@+id/rb_ori_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Right" />
@@ -47,20 +47,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:id="@+id/rg_divider_color"
         android:orientation="horizontal" >
-        <RadioButton android:id="@+id/radio_ninjas"
+        <RadioButton android:id="@+id/rb_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Black" />
-        <RadioButton android:id="@+id/radio_pirates"
+        <RadioButton android:id="@+id/rb_blue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yellow" />
-        <RadioButton android:id="@+id/radio_pirates"
+            android:text="Blue" />
+        <RadioButton android:id="@+id/rb_red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Black" />
-        <RadioButton android:id="@+id/radio_pirates"
+            android:text="Red" />
+        <RadioButton android:id="@+id/rb_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Green" />
@@ -71,4 +72,67 @@
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
         android:background="#B8B894" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Divider Height"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/rg_divider_height"
+        android:orientation="horizontal" >
+        <RadioButton android:id="@+id/rb_height_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1dp" />
+        <RadioButton android:id="@+id/rb_height_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3dp" />
+        <RadioButton android:id="@+id/rb_height_five"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5dp" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="#B8B894" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Background Color"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/rg_background_color"
+        android:orientation="horizontal" >
+        <RadioButton android:id="@+id/rb_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Light" />
+        <RadioButton android:id="@+id/rb_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Darks" />
+    </RadioGroup>
+    
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_marginTop="40dp"
+        android:id="@+id/button_pref_back" />
 </LinearLayout>

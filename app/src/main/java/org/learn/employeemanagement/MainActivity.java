@@ -84,15 +84,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         int textDirection = sharedPreferences.getInt(getString(R.string.list_text_orientation), 3);
         String dividerColor = sharedPreferences.getString(getString(R.string.list_divider_color), "#000000");
-        mListView.setDivider(new ColorDrawable(Color.parseColor(dividerColor)));
-        mListView.setDividerHeight(10);
+        int dividerHeight = sharedPreferences.getInt(getString(R.string.list_divider_height), 1);
+        String bgColor = sharedPreferences.getString(getString(R.string.list_background_color), "#eeeeee");
         mListView.setTextDirection(textDirection);
+        mListView.setDivider(new ColorDrawable(Color.parseColor(dividerColor)));
+        mListView.setDividerHeight(dividerHeight);
+        mListView.setBackgroundColor(Color.parseColor(bgColor));
     }
 
     private void initPreferences(SharedPreferences sharedPreferences) {
         SharedPreferences.Editor prefEditor = sharedPreferences.edit();
         prefEditor.putInt(getString(R.string.list_text_orientation), 3);
         prefEditor.putString(getString(R.string.list_divider_color), "#000000");
+        prefEditor.putInt(getString(R.string.list_divider_height), 1);
+        prefEditor.putString(getString(R.string.list_background_color), "#eeeeee");
         prefEditor.commit();
     }
 
