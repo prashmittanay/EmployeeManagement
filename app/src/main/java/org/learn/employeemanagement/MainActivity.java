@@ -1,8 +1,15 @@
 package org.learn.employeemanagement;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,12 +19,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "MainActivity";
@@ -29,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private ListView mListView;
     private TextView mTextView;
     private FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mFloatingSettingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +47,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.d(TAG, "onCreate called!");
         setContentView(R.layout.activity_main);
 
-        mListView = (ListView) findViewById(R.id.list_employees);
-        mTextView = (TextView) findViewById(R.id.emptyElement);
+        //test
+
+
+        mListView = findViewById(R.id.list_employees);
+        mTextView = findViewById(R.id.emptyElement);
         mListView.setEmptyView(mTextView);
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.add_employee);
+        mFloatingActionButton = findViewById(R.id.add_employee);
+        mFloatingSettingsButton = findViewById(R.id.button_settings);
 
         addListeners();
         LoaderManager.getInstance(this).initLoader(1, null, this);
@@ -57,10 +72,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume() called!");
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        if (sharedPreferences.getAll().size() == 0) {
+            initPreferences(sharedPreferences);
+        }
+        int textDirection = sharedPreferences.getInt(getString(R.string.list_text_orientation), 3);
+        String dividerColor = sharedPreferences.getString(getString(R.string.list_divider_color), "#000000");
+        mListView.setDivider(new ColorDrawable(Color.parseColor(dividerColor)));
+        mListView.setDividerHeight(10);
+        mListView.setTextDirection(textDirection);
+    }
+
+    private void initPreferences(SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor prefEditor = sharedPreferences.edit();
+        prefEditor.putInt(getString(R.string.list_text_orientation), 3);
+        prefEditor.putString(getString(R.string.list_divider_color), "#000000");
+        prefEditor.commit();
     }
 
     @Override
@@ -97,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private CursorLoader getAllEmployeesCursor() {
-
         CursorLoader cursorLoader = new CursorLoader(this, EmployeeContentProvider.CONTENT_URI,
                 null, null, null, null);
 
@@ -129,6 +161,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        mFloatingSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ListSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @NonNull
@@ -136,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         CursorLoader cursorLoader = new CursorLoader(this, EmployeeContentProvider.CONTENT_URI,
                 null, null, null, null);
-
         return cursorLoader;
     }
 
@@ -145,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         cursor.moveToFirst();
         CustomCursorAdapter customCursorAdapter = new CustomCursorAdapter(this, cursor, 0);
         mListView.setAdapter(customCursorAdapter);
-
     }
 
     @Override

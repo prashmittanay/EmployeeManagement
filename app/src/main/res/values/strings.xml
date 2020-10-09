@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">EmployeeManagement</string>
+    <string name="preference_file_key">org.learn.employeemanagement.LIST_SETTINGS</string>
+    <string name="list_text_orientation">TEXT_ORIENTATION</string>
+    <string name="list_divider_color">DIVIDER_COLOR</string>
 </resources>
