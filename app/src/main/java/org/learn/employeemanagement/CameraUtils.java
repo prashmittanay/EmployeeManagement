@@ -2,9 +2,14 @@ package org.learn.employeemanagement;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.view.Surface;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import java.io.IOException;
 
 public class CameraUtils {
     public static int getCameraDisplayOrientation(Activity activity,
@@ -61,5 +66,10 @@ public class CameraUtils {
             camera.stopPreview();
             camera.release();
         }
+    }
+
+    public static void drawImage(String pictureUri, ImageView imageView) {
+        Bitmap myBitmap = BitmapFactory.decodeFile(pictureUri);
+        imageView.setImageBitmap(myBitmap);
     }
 }

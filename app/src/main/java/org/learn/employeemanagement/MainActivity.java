@@ -156,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 Employee employee = new Employee(String.valueOf(cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID))),
                         cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME)),
-                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT)));
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.DEPARTMENT)),
+                        cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.PICTURE)));
 
                 Intent intent = new Intent(getApplicationContext(), UpdateEmployeeActivity.class);
                 intent.putExtra("Employee", employee);

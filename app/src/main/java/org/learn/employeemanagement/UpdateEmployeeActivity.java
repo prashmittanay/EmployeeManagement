@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 public class UpdateEmployeeActivity extends AppCompatActivity {
     private static final String TAG = "UpdateEmployeeActivity";
@@ -16,6 +17,7 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
     private EditText mId;
     private EditText mName;
     private EditText mDesignation;
+    private ImageView mPicturePreview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +27,12 @@ public class UpdateEmployeeActivity extends AppCompatActivity {
         mId = findViewById(R.id.edittext_id);
         mName = findViewById(R.id.edittext_name);
         mDesignation = findViewById(R.id.edittext_department);
-
+        mPicturePreview = findViewById(R.id.imageview_picture_preview);
         mId.setText(mEmployee.getId());
         mId.setEnabled(false);
         mName.setText(mEmployee.getName());
         mDesignation.setText(mEmployee.getDepartment());
+        CameraUtils.drawImage(mEmployee.getPicture(), mPicturePreview);
     }
 
     @Override
