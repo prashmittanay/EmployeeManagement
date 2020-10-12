@@ -1,8 +1,10 @@
 package org.learn.employeemanagement;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -46,17 +50,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate called!");
         setContentView(R.layout.activity_main);
-
-        //test
-
-
         mListView = findViewById(R.id.list_employees);
         mTextView = findViewById(R.id.emptyElement);
         mListView.setEmptyView(mTextView);
         mFloatingActionButton = findViewById(R.id.add_employee);
         mFloatingSettingsButton = findViewById(R.id.button_settings);
-
         addListeners();
+        getPermissions();
         LoaderManager.getInstance(this).initLoader(1, null, this);
     }
 
@@ -139,6 +139,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 null, null, null, null);
 
         return cursorLoader;
+    }
+
+    private void getPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.INTERNET}, 1);
+        }
     }
 
     private void addListeners() {
