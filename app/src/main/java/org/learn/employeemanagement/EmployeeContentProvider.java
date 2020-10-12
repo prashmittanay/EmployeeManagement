@@ -29,6 +29,7 @@ public class EmployeeContentProvider extends ContentProvider {
     static final String _ID = "_id";
     static final String NAME = "name";
     static final String DEPARTMENT = "department";
+    static final String PICTURE = "picture";
 
     // result holder
     static HashMap<String, String> EMPLOYEES_PROJECTION_MAP;
@@ -54,7 +55,8 @@ public class EmployeeContentProvider extends ContentProvider {
     static final String CREATE_DB_TABLE = "CREATE TABLE " + EMPLOYEE_TABLE_NAME
             + " (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
             + " name TEXT NOT NULL,"
-            + " department TEXT NOT NULL); ";
+            + " department TEXT NOT NULL,"
+            + " picture TEXT NOT NULL);";
 
     private class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -78,9 +80,7 @@ public class EmployeeContentProvider extends ContentProvider {
     public boolean onCreate() {
         Context context = getContext();
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
-
         mSQLiteDatabase = databaseHelper.getWritableDatabase();
-
         return !(mSQLiteDatabase == null);
     }
 
@@ -89,7 +89,6 @@ public class EmployeeContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
         sqLiteQueryBuilder.setTables(EMPLOYEE_TABLE_NAME);
-
         switch (uriMatcher.match(uri)) {
             case EMPLOYEES:
                 sqLiteQueryBuilder.setProjectionMap(EMPLOYEES_PROJECTION_MAP);
@@ -105,7 +104,6 @@ public class EmployeeContentProvider extends ContentProvider {
         }
 
         Cursor cursor = sqLiteQueryBuilder.query(mSQLiteDatabase, projection, selection, selectionArgs, null, null, sortOrder);
-
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
@@ -127,21 +125,17 @@ public class EmployeeContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         long rowId = mSQLiteDatabase.insert(EMPLOYEE_TABLE_NAME, "", contentValues);
-
-
         if (rowId > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(_uri, null);
             return _uri;
         }
-
         throw new SQLException("Failed to add a record into " + uri);
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int count = 0;
-
         switch (uriMatcher.match(uri)){
             case EMPLOYEES:
                 count = mSQLiteDatabase.delete(EMPLOYEE_TABLE_NAME, selection, selectionArgs);
@@ -152,13 +146,11 @@ public class EmployeeContentProvider extends ContentProvider {
                 if (!TextUtils.isEmpty(selection)) {
                     selectionQuery += " AND (" + selectionQuery + ")";
                 }
-
                 count = mSQLiteDatabase.delete(EMPLOYEE_TABLE_NAME, _ID + " = " + id + selectionQuery, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
@@ -166,7 +158,6 @@ public class EmployeeContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
         int count = 0;
-
         switch (uriMatcher.match(uri)){
             case EMPLOYEES:
                 count = mSQLiteDatabase.update(EMPLOYEE_TABLE_NAME, contentValues, selection, selectionArgs);
@@ -177,13 +168,11 @@ public class EmployeeContentProvider extends ContentProvider {
                 if (!TextUtils.isEmpty(selection)) {
                     selectionQuery += " AND (" + selectionQuery + ")";
                 }
-
                 count = mSQLiteDatabase.update(EMPLOYEE_TABLE_NAME, contentValues, _ID + " = " + id + selectionQuery, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }

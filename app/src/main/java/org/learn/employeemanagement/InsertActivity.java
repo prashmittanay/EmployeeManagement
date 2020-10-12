@@ -42,6 +42,7 @@ public class InsertActivity extends AppCompatActivity {
             ContentValues contentValues = new ContentValues();
             contentValues.put(EmployeeContentProvider.NAME, name);
             contentValues.put(EmployeeContentProvider.DEPARTMENT, department);
+            contentValues.put(EmployeeContentProvider.PICTURE, pictureUri);
 
             Uri uri = getContentResolver().insert(EmployeeContentProvider.CONTENT_URI, contentValues);
             returnToCaller("New User created with ID: " + uri.getPathSegments().get(uri.getPathSegments().size() - 1));

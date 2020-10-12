@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private CursorLoader getAllEmployeesCursor() {
         CursorLoader cursorLoader = new CursorLoader(this, EmployeeContentProvider.CONTENT_URI,
                 null, null, null, null);
-
         return cursorLoader;
     }
 
