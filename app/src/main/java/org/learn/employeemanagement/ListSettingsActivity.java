@@ -19,6 +19,7 @@ public class ListSettingsActivity extends AppCompatActivity {
     private RadioGroup mDividerColorRadioGroup;
     private RadioGroup mDividerHeightRadioGroup;
     private RadioGroup mBackgroundRadioGroup;
+    private RadioGroup mListTypeRadioGroup;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mPreferencesEditor;
     private Button mBackButton;
@@ -31,6 +32,7 @@ public class ListSettingsActivity extends AppCompatActivity {
         mDividerColorRadioGroup = findViewById(R.id.rg_divider_color);
         mDividerHeightRadioGroup = findViewById(R.id.rg_divider_height);
         mBackgroundRadioGroup = findViewById(R.id.rg_background_color);
+        mListTypeRadioGroup = findViewById(R.id.rg_list_type);
         mBackButton = findViewById(R.id.button_pref_back);
         initSettings();
         onChangeListeners();
@@ -120,6 +122,22 @@ public class ListSettingsActivity extends AppCompatActivity {
                 mPreferencesEditor.apply();
             }
         });
+        mListTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int listType = 0;
+                switch (checkedId) {
+                    case R.id.rb_ltype_condensed:
+                        listType = 0;
+                        break;
+                    case R.id.rb_ltype_expanded:
+                        listType = 1;
+                        break;
+                }
+                mPreferencesEditor.putInt(getString(R.string.list_view_type), listType);
+                mPreferencesEditor.apply();
+            }
+        });
     }
 
     private void initSettings() {
@@ -129,6 +147,7 @@ public class ListSettingsActivity extends AppCompatActivity {
         String dividerColor = mSharedPreferences.getString(getString(R.string.list_divider_color), "#000000");
         int dividerHeight = mSharedPreferences.getInt(getString(R.string.list_divider_height), 1);
         String bgColor = mSharedPreferences.getString(getString(R.string.list_background_color), "#eeeeee");
+        int listType = mSharedPreferences.getInt(getString(R.string.list_view_type), 0);
         mPreferencesEditor = mSharedPreferences.edit();
 
         if (textDirection == View.TEXT_DIRECTION_LTR)
@@ -167,5 +186,10 @@ public class ListSettingsActivity extends AppCompatActivity {
             mBackgroundRadioGroup.check(R.id.rb_light);
         else
             mBackgroundRadioGroup.check(R.id.rb_dark);
+
+        if (listType == 0)
+            mListTypeRadioGroup.check(R.id.rb_ltype_condensed);
+        else
+            mListTypeRadioGroup.check(R.id.rb_ltype_expanded);
     }
 }
