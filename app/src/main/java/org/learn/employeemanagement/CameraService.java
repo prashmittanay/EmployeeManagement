@@ -71,7 +71,6 @@ public class CameraService extends Service {
                 fileOutputStream = new FileOutputStream(pictureFile);
                 fileOutputStream.write(byteArrayOutputStream.toByteArray());
                 publishResults(pictureFile.getAbsolutePath());
-                CameraUtils.releaseCameraInstance(mCamera);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -91,6 +90,7 @@ public class CameraService extends Service {
                         e.printStackTrace();
                     }
                 }
+                CameraUtils.releaseCameraInstance(mCamera);
             }
         }
     };
