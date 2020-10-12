@@ -19,15 +19,38 @@ public class CustomCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.listview_expanded_row_layout, parent, false);
+        if (MainActivity.LIST_VIEW_TYPE == 0)
+            return LayoutInflater.from(context).inflate(R.layout.listview_row_layout, parent, false);
+        else
+            return LayoutInflater.from(context).inflate(R.layout.listview_expanded_row_layout, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView employeeIdTextView = (TextView) view.findViewById(R.id.expanded_text_employeeID);
-        TextView employeeNameTextView = (TextView) view.findViewById(R.id.expanded_text_employeeName);
-        TextView employeeDepartmentTextView = (TextView) view.findViewById(R.id.expanded_text_employeeDepartment);
-        ImageView employeePictureImageView = (ImageView) view.findViewById(R.id.imageview_list_picture_preview);
+        int idId;
+        int idName;
+        int idDepartment;
+        int idPicture;
+        switch (MainActivity.LIST_VIEW_TYPE) {
+            case 1:
+                idId = R.id.expanded_text_employeeID;
+                idName = R.id.expanded_text_employeeName;
+                idDepartment = R.id.expanded_text_employeeDepartment;
+                idPicture = R.id.imageview_list_picture_preview;
+                break;
+            default:
+                idId = R.id.text_employeeID;
+                idName = R.id.text_employeeName;
+                idDepartment = R.id.text_employeeDepartment;
+                idPicture = R.id.imageview_list_picture_preview;
+                break;
+
+        }
+        TextView employeeIdTextView = (TextView) view.findViewById(idId);
+        TextView employeeNameTextView = (TextView) view.findViewById(idName);
+        TextView employeeDepartmentTextView = (TextView) view.findViewById(idDepartment);
+        ImageView employeePictureImageView = (ImageView) view.findViewById(idPicture);
+
 
         int id = cursor.getInt(cursor.getColumnIndex(EmployeeContentProvider._ID));
         String name = cursor.getString(cursor.getColumnIndex(EmployeeContentProvider.NAME));
@@ -37,6 +60,7 @@ public class CustomCursorAdapter extends CursorAdapter {
         employeeIdTextView.setText(String.valueOf(id));
         employeeNameTextView.setText(name);
         employeeDepartmentTextView.setText(department);
-        CameraUtils.drawImage(picture, employeePictureImageView);
+        if (MainActivity.LIST_VIEW_TYPE == 1)
+            CameraUtils.drawImage(picture, employeePictureImageView);
     }
 }

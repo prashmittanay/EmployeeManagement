@@ -5,4 +5,5 @@
     <string name="list_divider_color">DIVIDER_COLOR</string>
     <string name="list_divider_height">DIVIDER_HEIGHT</string>
     <string name="list_background_color">BACKGROUND_COLOR</string>
+    <string name="list_view_type">LIST_VIEW_TYPE</string>
 </resources>

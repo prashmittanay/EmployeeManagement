@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int INSERT_ACTIVITY_CODE = 2;
     private String mMessage;
     private int mResultInt = 0;
-
     private ListView mListView;
     private TextView mTextView;
     private FloatingActionButton mFloatingActionButton;
     private FloatingActionButton mFloatingSettingsButton;
+    protected static int LIST_VIEW_TYPE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String dividerColor = sharedPreferences.getString(getString(R.string.list_divider_color), "#000000");
         int dividerHeight = sharedPreferences.getInt(getString(R.string.list_divider_height), 1);
         String bgColor = sharedPreferences.getString(getString(R.string.list_background_color), "#eeeeee");
+        LIST_VIEW_TYPE = sharedPreferences.getInt(getString(R.string.list_view_type), 0);
         mListView.setTextDirection(textDirection);
         mListView.setDivider(new ColorDrawable(Color.parseColor(dividerColor)));
         mListView.setDividerHeight(dividerHeight);
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         prefEditor.putString(getString(R.string.list_divider_color), "#000000");
         prefEditor.putInt(getString(R.string.list_divider_height), 1);
         prefEditor.putString(getString(R.string.list_background_color), "#eeeeee");
+        prefEditor.putInt(getString(R.string.list_view_type), 0);
         prefEditor.commit();
     }
 
